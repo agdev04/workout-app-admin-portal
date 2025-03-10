@@ -9,11 +9,10 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { storage } from "@/lib/firebase"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import Image from "next/image"
 import { MultiSelect, type Option } from "@/components/ui/multi-select"
 import { useAuthenticatedFetch } from "@/hooks/useAuthenticatedFetch"
+import { uploadImage } from "@/lib/uploadImage"
 
 interface Exercise {
   id: number
@@ -80,9 +79,7 @@ export default function EditExerciseForm({ exercise, onSubmit, onCancel }: EditE
     let new_thumbnail_url = thumbnailUrl
     if (thumbnailFile) {
       try {
-        const storageRef = ref(storage, `exercise_thumbnails/${Date.now()}_${thumbnailFile.name}`)
-        const snapshot = await uploadBytes(storageRef, thumbnailFile)
-        new_thumbnail_url = await getDownloadURL(snapshot.ref)
+        new_thumbnail_url = await uploadImage(thumbnailFile, "exercise_thumbnails")
       } catch (error) {
         console.error("Error uploading file:", error)
         setIsUploading(false)

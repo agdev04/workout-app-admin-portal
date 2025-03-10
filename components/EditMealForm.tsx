@@ -8,12 +8,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { storage } from "@/lib/firebase"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import Image from "next/image"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GripVertical, Plus, X } from "lucide-react"
 import { useAuthenticatedFetch } from "@/hooks/useAuthenticatedFetch"
+import { uploadImage } from "@/lib/uploadImage"
 
 const mealCategories = [
   "Breakfast",
@@ -88,9 +87,7 @@ export default function EditMealForm({ meal, onSubmit, onCancel }: EditMealFormP
     let new_image_url = imageUrl
     if (imageFile) {
       try {
-        const storageRef = ref(storage, `meal_images/${Date.now()}_${imageFile.name}`)
-        const snapshot = await uploadBytes(storageRef, imageFile)
-        new_image_url = await getDownloadURL(snapshot.ref)
+        new_image_url = await uploadImage(imageFile, "meal_images")
       } catch (error) {
         console.error("Error uploading file:", error)
         setIsUploading(false)

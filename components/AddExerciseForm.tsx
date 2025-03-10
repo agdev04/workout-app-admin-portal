@@ -9,10 +9,9 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { storage } from "@/lib/firebase"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { useAuthenticatedFetch } from "@/hooks/useAuthenticatedFetch"
 import { MultiSelect, type Option } from "@/components/ui/multi-select"
+import { uploadImage } from "@/lib/uploadImage"
 
 interface AddExerciseFormProps {
   onSubmit: (exercise: {
@@ -71,9 +70,7 @@ export default function AddExerciseForm({ onSubmit, onCancel }: AddExerciseFormP
     let thumbnail_url = ""
     if (thumbnailFile) {
       try {
-        const storageRef = ref(storage, `exercise_thumbnails/${Date.now()}_${thumbnailFile.name}`)
-        const snapshot = await uploadBytes(storageRef, thumbnailFile)
-        thumbnail_url = await getDownloadURL(snapshot.ref)
+        thumbnail_url = await uploadImage(thumbnailFile, "exercise_thumbnails")
       } catch (error) {
         console.error("Error uploading file:", error)
         setIsUploading(false)

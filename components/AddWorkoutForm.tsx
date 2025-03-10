@@ -9,11 +9,10 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { storage } from "@/lib/firebase"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { useAuthenticatedFetch } from "@/hooks/useAuthenticatedFetch"
 import { GripVertical, Plus, X } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { uploadImage } from "@/lib/uploadImage"
 
 const difficultyLevels = ["beginner", "intermediate", "advanced", "expert"]
 
@@ -87,9 +86,7 @@ export default function AddWorkoutForm({ onSubmit, onCancel }: AddWorkoutFormPro
     let thumbnail_url = ""
     if (thumbnailFile) {
       try {
-        const storageRef = ref(storage, `workout_thumbnails/${Date.now()}_${thumbnailFile.name}`)
-        const snapshot = await uploadBytes(storageRef, thumbnailFile)
-        thumbnail_url = await getDownloadURL(snapshot.ref)
+        thumbnail_url = await uploadImage(thumbnailFile, "workout_thumbnails")
       } catch (error) {
         console.error("Error uploading file:", error)
         setIsUploading(false)

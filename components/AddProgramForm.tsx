@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { storage } from "@/lib/firebase"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { uploadImage } from "@/lib/uploadImage"
 import { useAuthenticatedFetch } from "@/hooks/useAuthenticatedFetch"
 import { GripVertical, Plus, X, ChevronUp, ChevronDown } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -88,9 +87,7 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
     let image_url = ""
     if (thumbnailFile) {
       try {
-        const storageRef = ref(storage, `program_thumbnails/${Date.now()}_${thumbnailFile.name}`)
-        const snapshot = await uploadBytes(storageRef, thumbnailFile)
-        image_url = await getDownloadURL(snapshot.ref)
+        image_url = await uploadImage(thumbnailFile, "program_thumbnails")
       } catch (error) {
         console.error("Error uploading file:", error)
         setIsUploading(false)

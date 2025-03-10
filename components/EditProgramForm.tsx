@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { storage } from "@/lib/firebase"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { uploadImage } from "@/lib/uploadImage"
 import Image from "next/image"
 import { useAuthenticatedFetch } from "@/hooks/useAuthenticatedFetch"
 import { GripVertical, Plus, X, ChevronDown, ChevronUp } from "lucide-react"
@@ -199,9 +198,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
       // Only upload new image if changed
       if (isImageChanged) {
         try {
-          const storageRef = ref(storage, `program_thumbnails/${Date.now()}_${thumbnailFile.name}`)
-          const snapshot = await uploadBytes(storageRef, thumbnailFile)
-          new_image_url = await getDownloadURL(snapshot.ref)
+          new_image_url = await uploadImage(thumbnailFile, "program_thumbnails")
         } catch (error) {
           console.error("Error uploading file:", error)
           setIsUploading(false)
