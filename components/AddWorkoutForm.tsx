@@ -29,6 +29,7 @@ interface WorkoutExercise {
   duration_seconds?: number
   rest_seconds: number
   position: number
+  sets_number: number
 }
 
 interface AddWorkoutFormProps {
@@ -124,6 +125,7 @@ export default function AddWorkoutForm({ onSubmit, onCancel }: AddWorkoutFormPro
               duration_seconds: exercise.duration_seconds,
               rest_seconds: exercise.rest_seconds,
               position: exercise.position,
+              sets_number: exercise.sets_number,
             }),
           }),
         ),
@@ -143,8 +145,10 @@ export default function AddWorkoutForm({ onSubmit, onCancel }: AddWorkoutFormPro
     }
   }, [])
 
+  const [sets, setSets] = useState("")
+
   const addExercise = useCallback(() => {
-    if (!selectedExerciseId || !restSeconds) return
+    if (!selectedExerciseId || !restSeconds || !sets) return
 
     const exercise = exercises.find((e) => e.id === Number(selectedExerciseId))
     if (!exercise) return
@@ -154,6 +158,7 @@ export default function AddWorkoutForm({ onSubmit, onCancel }: AddWorkoutFormPro
       exercise,
       rest_seconds: Number(restSeconds),
       position: workoutExercises.length + 1,
+      sets_number: Number(sets),
     }
 
     if (exerciseType === "reps" && reps) {
@@ -270,7 +275,7 @@ export default function AddWorkoutForm({ onSubmit, onCancel }: AddWorkoutFormPro
                     <span className="font-medium">{workoutExercise.position}.</span>
                     <span className="flex-1">{workoutExercise.exercise?.name}</span>
                     <span className="text-sm text-muted-foreground">
-                      {workoutExercise.reps ? `${workoutExercise.reps} reps` : `${workoutExercise.duration_seconds}s`}
+                      {workoutExercise.reps ? `${workoutExercise.reps} reps` : `${workoutExercise.duration_seconds}s`} × {workoutExercise.sets_number} sets
                     </span>
                     <span className="text-sm text-muted-foreground">Rest: {workoutExercise.rest_seconds}s</span>
                     <Button type="button" variant="ghost" size="sm" onClick={() => removeExercise(index)}>
@@ -279,8 +284,8 @@ export default function AddWorkoutForm({ onSubmit, onCancel }: AddWorkoutFormPro
                   </div>
                 ))}
                 <div className="space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="col-span-2">
                       <Label htmlFor="exercise">Exercise</Label>
                       <Select value={selectedExerciseId} onValueChange={setSelectedExerciseId}>
                         <SelectTrigger>
@@ -296,6 +301,18 @@ export default function AddWorkoutForm({ onSubmit, onCancel }: AddWorkoutFormPro
                       </Select>
                     </div>
                     <div>
+                      <Label htmlFor="sets">Sets</Label>
+                      <Input
+                        id="sets"
+                        type="number"
+                        min="1"
+                        value={sets}
+                        onChange={(e) => setSets(e.target.value)}
+                        placeholder="3"
+                        required
+                      />
+                    </div>
+                    <div className="col-span-3">
                       <Label htmlFor="rest">Rest (seconds)</Label>
                       <Input
                         id="rest"
