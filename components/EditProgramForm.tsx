@@ -105,7 +105,8 @@ const haveDaysChanged = (original: ProgramDay[], current: ProgramDay[]) => {
         originalExercise.position !== currentExercise.position ||
         originalExercise.reps !== currentExercise.reps ||
         originalExercise.duration_seconds !== currentExercise.duration_seconds ||
-        originalExercise.rest_seconds !== currentExercise.rest_seconds
+        originalExercise.rest_seconds !== currentExercise.rest_seconds ||
+        originalExercise.sets_number !== currentExercise.sets_number
       )
     })
   })
@@ -289,6 +290,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
                   reps: exercise.reps,
                   duration_seconds: exercise.duration_seconds,
                   rest_seconds: exercise.rest_seconds,
+                  sets_number: exercise.sets_number
                 }),
               })
             }
@@ -322,6 +324,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
                   reps: exercise.reps,
                   duration_seconds: exercise.duration_seconds,
                   rest_seconds: exercise.rest_seconds,
+                  sets_number: exercise.sets_number
                 }),
               })
             }
