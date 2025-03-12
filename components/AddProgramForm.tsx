@@ -28,6 +28,7 @@ interface DayExercise {
   reps?: number
   duration_seconds?: number
   rest_seconds: number
+  sets_number: number
 }
 
 interface ProgramDay {
@@ -61,6 +62,7 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
   const [reps, setReps] = useState("")
   const [duration, setDuration] = useState("")
   const [restSeconds, setRestSeconds] = useState("")
+  const [sets, setSets] = useState("")
   const { authFetch } = useAuthenticatedFetch()
   const [expandedWeeks, setExpandedWeeks] = useState<number[]>([])
   const [expandedDays, setExpandedDays] = useState<{ [key: string]: boolean }>({})
@@ -144,6 +146,7 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
                 reps: exercise.reps,
                 duration_seconds: exercise.duration_seconds,
                 rest_seconds: exercise.rest_seconds,
+                sets_number: exercise.sets_number,
               }),
             })
           }
@@ -229,10 +232,10 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
   }
 
   const addExerciseToDay = (weekNumber: number, dayNumber: number) => {
-    if (!selectedExerciseId || !restSeconds) return
+    if (!selectedExerciseId || !restSeconds || !sets) return;
 
-    const exercise = exercises.find((e) => e.id === Number(selectedExerciseId))
-    if (!exercise) return
+    const exercise = exercises.find((e) => e.id === Number(selectedExerciseId));
+    if (!exercise) return;
 
     const updatedWeeks = weeks.map((week) => {
       if (week.week_number !== weekNumber) return week
@@ -240,13 +243,14 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
       const updatedDays = week.days.map((day) => {
         if (day.day_number !== dayNumber) return day
 
-        const maxPosition = Math.max(0, ...day.exercises.map((e) => e.position))
+        const maxPosition = Math.max(0, ...day.exercises.map((e) => e.position));
         const newExercise: DayExercise = {
           exercise_id: exercise.id,
           exercise,
           day_number: dayNumber,
           position: maxPosition + 1,
           rest_seconds: Number(restSeconds),
+          sets_number: Number(sets),
         }
 
         if (exerciseType === "reps" && reps) {
@@ -524,6 +528,16 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
                                           value={restSeconds}
                                           onChange={(e) => setRestSeconds(e.target.value)}
                                           placeholder="60"
+                                        />
+                                      </div>
+                                      <div>
+                                        <Label>Sets</Label>
+                                        <Input
+                                          type="number"
+                                          min="1"
+                                          value={sets}
+                                          onChange={(e) => setSets(e.target.value)}
+                                          placeholder="3"
                                         />
                                       </div>
                                     </div>

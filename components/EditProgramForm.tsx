@@ -33,6 +33,7 @@ interface DayExercise {
   reps?: number | null
   duration_seconds?: number | null
   rest_seconds: number
+  sets_number: number
   programme_week_id?: number
 }
 
@@ -143,6 +144,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
   const [reps, setReps] = useState("")
   const [duration, setDuration] = useState("")
   const [restSeconds, setRestSeconds] = useState("")
+  const [sets, setSets] = useState("")
 
   const [originalProgram] = useState(program)
   const [originalWeeks] = useState(weeks)
@@ -517,7 +519,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
 
   // Add function to add exercise to a day
   const addExerciseToDay = (weekNumber: number, dayNumber: number) => {
-    if (!selectedExerciseId || !restSeconds) return
+    if (!selectedExerciseId || !restSeconds || !sets) return
 
     const exercise = exercises.find((e) => e.id === Number(selectedExerciseId))
     if (!exercise) return
@@ -535,6 +537,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
           day_number: dayNumber,
           position: maxPosition + 1,
           rest_seconds: Number(restSeconds),
+          sets_number: Number(sets),
         }
 
         if (exerciseType === "reps" && reps) {
@@ -560,6 +563,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
     setReps("")
     setDuration("")
     setRestSeconds("")
+    setSets("")
   }
 
   return (
@@ -706,7 +710,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
                                           {exercise.reps ? `${exercise.reps} reps` : `${exercise.duration_seconds}s`}
                                         </span>
                                         <span className="text-sm text-muted-foreground">
-                                          Rest: {exercise.rest_seconds}s
+                                          {exercise.sets_number} sets, Rest: {exercise.rest_seconds}s
                                         </span>
                                         <Button
                                           type="button"
@@ -738,6 +742,16 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
                                             ))}
                                           </SelectContent>
                                         </Select>
+                                      </div>
+                                      <div>
+                                        <Label>Sets</Label>
+                                        <Input
+                                          type="number"
+                                          min="1"
+                                          value={sets}
+                                          onChange={(e) => setSets(e.target.value)}
+                                          placeholder="3"
+                                        />
                                       </div>
                                       <div>
                                         <Label>Rest (seconds)</Label>
