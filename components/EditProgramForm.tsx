@@ -710,7 +710,7 @@ export default function EditProgramForm({ program, onSubmit, onCancel }: EditPro
                                           {exercise.reps ? `${exercise.reps} reps` : `${exercise.duration_seconds}s`}
                                         </span>
                                         <span className="text-sm text-muted-foreground">
-                                          {exercise.sets_number} sets, Rest: {exercise.rest_seconds}s
+                                          x {exercise.sets_number} sets Rest: {exercise.rest_seconds}s
                                         </span>
                                         <Button
                                           type="button"

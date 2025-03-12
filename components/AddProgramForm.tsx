@@ -487,7 +487,7 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
                                         {exercise.reps ? `${exercise.reps} reps` : `${exercise.duration_seconds}s`}
                                       </span>
                                       <span className="text-sm text-muted-foreground">
-                                        Rest: {exercise.rest_seconds}s
+                                      x {exercise.sets_number} sets Rest: {exercise.rest_seconds}s
                                       </span>
                                       <Button
                                         type="button"
@@ -520,16 +520,7 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
                                           </SelectContent>
                                         </Select>
                                       </div>
-                                      <div>
-                                        <Label>Rest (seconds)</Label>
-                                        <Input
-                                          type="number"
-                                          min="0"
-                                          value={restSeconds}
-                                          onChange={(e) => setRestSeconds(e.target.value)}
-                                          placeholder="60"
-                                        />
-                                      </div>
+                                      
                                       <div>
                                         <Label>Sets</Label>
                                         <Input
@@ -538,6 +529,16 @@ export default function AddProgramForm({ onSubmit, onCancel }: AddProgramFormPro
                                           value={sets}
                                           onChange={(e) => setSets(e.target.value)}
                                           placeholder="3"
+                                        />
+                                      </div>
+                                      <div>
+                                        <Label>Rest (seconds)</Label>
+                                        <Input
+                                          type="number"
+                                          min="0"
+                                          value={restSeconds}
+                                          onChange={(e) => setRestSeconds(e.target.value)}
+                                          placeholder="60"
                                         />
                                       </div>
                                     </div>
