@@ -55,6 +55,13 @@ interface Meal {
   category: string
   description: string
   image_url: string
+  prep_time: string
+  servings: number
+  calories: string
+  protein: string
+  fat: string
+  carbs: string
+  difficulty: string
   ingredients?: Ingredient[]
   instructions?: Instruction[]
 }
@@ -71,6 +78,13 @@ export default function EditMealForm({ meal, onSubmit, onCancel }: EditMealFormP
   const [description, setDescription] = useState(meal.description)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imageUrl, setImageUrl] = useState(meal.image_url)
+  const [prepTime, setPrepTime] = useState(meal.prep_time)
+  const [servings, setServings] = useState(meal.servings)
+  const [calories, setCalories] = useState(meal.calories)
+  const [protein, setProtein] = useState(meal.protein)
+  const [fat, setFat] = useState(meal.fat)
+  const [carbs, setCarbs] = useState(meal.carbs)
+  const [difficulty, setDifficulty] = useState(meal.difficulty)
   const [isUploading, setIsUploading] = useState(false)
   const [ingredients, setIngredients] = useState<Ingredient[]>(meal.ingredients || [])
   const [newIngredientName, setNewIngredientName] = useState("")
@@ -102,7 +116,19 @@ export default function EditMealForm({ meal, onSubmit, onCancel }: EditMealFormP
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, category, description, image_url: new_image_url }),
+        body: JSON.stringify({ 
+          name, 
+          category, 
+          description, 
+          image_url: new_image_url,
+          prep_time: prepTime,
+          servings,
+          calories,
+          protein,
+          fat,
+          carbs,
+          difficulty
+        }),
       })
 
       // Handle ingredients updates
@@ -185,6 +211,13 @@ export default function EditMealForm({ meal, onSubmit, onCancel }: EditMealFormP
         category,
         description,
         image_url: new_image_url,
+        prep_time: prepTime,
+        servings,
+        calories,
+        protein,
+        fat,
+        carbs,
+        difficulty,
         ingredients: updatedIngredients,
         instructions,
       })
@@ -391,6 +424,100 @@ export default function EditMealForm({ meal, onSubmit, onCancel }: EditMealFormP
                   </Button>
                 </div>
               </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="prepTime" className="text-right">
+                Prep Time
+              </Label>
+              <Input
+                id="prepTime"
+                value={prepTime}
+                onChange={(e) => setPrepTime(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 30 minutes"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="servings" className="text-right">
+                Servings
+              </Label>
+              <Input
+                id="servings"
+                type="number"
+                value={servings}
+                onChange={(e) => setServings(parseInt(e.target.value))}
+                className="col-span-3"
+                required
+                min="1"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="calories" className="text-right">
+                Calories
+              </Label>
+              <Input
+                id="calories"
+                value={calories}
+                onChange={(e) => setCalories(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 500 kcal"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="protein" className="text-right">
+                Protein
+              </Label>
+              <Input
+                id="protein"
+                value={protein}
+                onChange={(e) => setProtein(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 20g"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="fat" className="text-right">
+                Fat
+              </Label>
+              <Input
+                id="fat"
+                value={fat}
+                onChange={(e) => setFat(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 15g"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="carbs" className="text-right">
+                Carbs
+              </Label>
+              <Input
+                id="carbs"
+                value={carbs}
+                onChange={(e) => setCarbs(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 60g"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="difficulty" className="text-right">
+                Difficulty
+              </Label>
+              <Select value={difficulty} onValueChange={setDifficulty} required>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select difficulty level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Easy">Easy</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="Hard">Hard</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter className="pr-2">

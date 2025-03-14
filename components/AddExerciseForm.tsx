@@ -23,6 +23,7 @@ interface AddExerciseFormProps {
     bodyParts?: any[]
     equipment?: any[]
     id: number
+    met?: number
   }) => void
   onCancel: () => void
 }
@@ -40,6 +41,7 @@ export default function AddExerciseForm({ onSubmit, onCancel }: AddExerciseFormP
   const [selectedBodyParts, setSelectedBodyParts] = useState<Option[]>([])
   const [selectedEquipment, setSelectedEquipment] = useState<Option[]>([])
   const [videoUrl, setVideoUrl] = useState("")
+  const [met, setMet] = useState<number>(0)
 
   const { authFetch } = useAuthenticatedFetch()
 
@@ -85,6 +87,7 @@ export default function AddExerciseForm({ onSubmit, onCancel }: AddExerciseFormP
         thumbnail_url,
         is_active: isActive,
         video_url: videoUrl,
+        met,
       }
       const response = await authFetch(`${process.env.NEXT_PUBLIC_BASE_URL}/exercises`, {
         method: "POST",
@@ -282,6 +285,21 @@ export default function AddExerciseForm({ onSubmit, onCancel }: AddExerciseFormP
                 Active
               </Label>
               <Switch id="is_active" checked={isActive} onCheckedChange={setIsActive} />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="met" className="text-right">
+                MET
+              </Label>
+              <Input
+                id="met"
+                type="number"
+                value={met}
+                onChange={(e) => setMet(Number(e.target.value))}
+                className="col-span-3"
+                min="0"
+                step="0.1"
+                placeholder="Enter MET value"
+              />
             </div>
           </div>
           <DialogFooter>

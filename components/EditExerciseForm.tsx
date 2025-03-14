@@ -21,6 +21,7 @@ interface Exercise {
   thumbnail_url: string
   is_active: boolean
   video_url?: string
+  met?: number
   categories?: { id: number; name: string }[]
   body_parts?: { id: number; name: string }[]
   equipment?: { id: number; name: string }[]
@@ -40,6 +41,7 @@ export default function EditExerciseForm({ exercise, onSubmit, onCancel }: EditE
   const [isActive, setIsActive] = useState(exercise.is_active)
   const [videoUrl, setVideoUrl] = useState(exercise.video_url || "")
   const [isUploading, setIsUploading] = useState(false)
+  const [met, setMet] = useState<number>(exercise.met || 0)
   const [categories, setCategories] = useState<Option[]>([])
   const [bodyParts, setBodyParts] = useState<Option[]>([])
   const [equipment, setEquipment] = useState<Option[]>([])
@@ -95,6 +97,7 @@ export default function EditExerciseForm({ exercise, onSubmit, onCancel }: EditE
         thumbnail_url: new_thumbnail_url,
         is_active: isActive,
         video_url: videoUrl,
+        met,
       }
 
       await authFetch(`${process.env.NEXT_PUBLIC_BASE_URL}/exercises/${exercise.id}`, {
@@ -353,6 +356,20 @@ export default function EditExerciseForm({ exercise, onSubmit, onCancel }: EditE
                   className="col-span-3"
                 />
               </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="met" className="text-right">
+                MET
+              </Label>
+              <Input
+                id="met"
+                type="number"
+                value={met}
+                onChange={(e) => setMet(Number(e.target.value))}
+                className="col-span-3"
+                min="0"
+                placeholder="Enter MET value"
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="is_active" className="text-right">

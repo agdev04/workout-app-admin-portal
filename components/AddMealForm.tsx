@@ -45,7 +45,7 @@ interface Instruction {
 }
 
 interface AddMealFormProps {
-  onSubmit: (meal: { name: string; category: string; description: string; image_url: string }) => void
+  onSubmit: (meal: { name: string; category: string; description: string; image_url: string; prep_time: string; servings: number; calories: string; protein: string; fat: string; carbs: string; difficulty: string }) => void
   onCancel: () => void
 }
 
@@ -61,6 +61,13 @@ export default function AddMealForm({ onSubmit, onCancel }: AddMealFormProps) {
   const [instructions, setInstructions] = useState<Instruction[]>([])
   const [newInstruction, setNewInstruction] = useState("")
   const [draggedInstructionIndex, setDraggedInstructionIndex] = useState<number | null>(null)
+  const [prepTime, setPrepTime] = useState("")
+  const [servings, setServings] = useState(1)
+  const [calories, setCalories] = useState("")
+  const [protein, setProtein] = useState("")
+  const [fat, setFat] = useState("")
+  const [carbs, setCarbs] = useState("")
+  const [difficulty, setDifficulty] = useState("")
   const { authFetch } = useAuthenticatedFetch()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,7 +91,19 @@ export default function AddMealForm({ onSubmit, onCancel }: AddMealFormProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, category, description, image_url }),
+        body: JSON.stringify({ 
+          name, 
+          category, 
+          description, 
+          image_url,
+          prep_time: prepTime,
+          servings,
+          calories,
+          protein,
+          fat,
+          carbs,
+          difficulty
+        }),
       })
 
       const newMealId = mealResponse.data.id
@@ -119,7 +138,19 @@ export default function AddMealForm({ onSubmit, onCancel }: AddMealFormProps) {
         })
       }
 
-      onSubmit({ name, category, description, image_url })
+      onSubmit({ 
+        name, 
+        category, 
+        description, 
+        image_url,
+        prep_time: prepTime,
+        servings,
+        calories,
+        protein,
+        fat,
+        carbs,
+        difficulty
+      })
     } catch (error) {
       console.error("Error adding meal, ingredients, or instructions:", error)
     } finally {
@@ -245,6 +276,100 @@ export default function AddMealForm({ onSubmit, onCancel }: AddMealFormProps) {
                 Image
               </Label>
               <Input id="image" type="file" onChange={handleFileChange} className="col-span-3" accept="image/*" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="prepTime" className="text-right">
+                Prep Time
+              </Label>
+              <Input
+                id="prepTime"
+                value={prepTime}
+                onChange={(e) => setPrepTime(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 30 minutes"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="servings" className="text-right">
+                Servings
+              </Label>
+              <Input
+                id="servings"
+                type="number"
+                value={servings}
+                onChange={(e) => setServings(parseInt(e.target.value))}
+                className="col-span-3"
+                required
+                min="1"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="calories" className="text-right">
+                Calories
+              </Label>
+              <Input
+                id="calories"
+                value={calories}
+                onChange={(e) => setCalories(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 500 kcal"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="protein" className="text-right">
+                Protein
+              </Label>
+              <Input
+                id="protein"
+                value={protein}
+                onChange={(e) => setProtein(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 20g"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="fat" className="text-right">
+                Fat
+              </Label>
+              <Input
+                id="fat"
+                value={fat}
+                onChange={(e) => setFat(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 15g"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="carbs" className="text-right">
+                Carbs
+              </Label>
+              <Input
+                id="carbs"
+                value={carbs}
+                onChange={(e) => setCarbs(e.target.value)}
+                className="col-span-3"
+                required
+                placeholder="e.g., 60g"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4 pr-2">
+              <Label htmlFor="difficulty" className="text-right">
+                Difficulty
+              </Label>
+              <Select value={difficulty} onValueChange={setDifficulty} required>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select difficulty level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Easy">Easy</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="Hard">Hard</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-4 items-start gap-4 pr-2">
               <Label className="text-left pt-2">Ingredients</Label>
