@@ -40,5 +40,5 @@ export async function uploadImage(file: File, folder: string): Promise<string> {
   } catch (error) {
     console.error('Error uploading file to R2:', error);
     throw error;
-  } 
+  }
 }
